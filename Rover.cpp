@@ -11,18 +11,29 @@ Rover::Rover(Engine *left, Engine *right, int power)
 }
 
 void Rover::move(float angle)
-{
-  _error = abs(_left->getTicks()) - abs(_right->getTicks());
-  _slave->setPower(min(255, _slave->getPower() - _error / _errorDivider));
-//  Serial.print(_error);
-//  Serial.print(" ");
-//  Serial.println(_slave->getPower());
+{ 
+  if (angle == 0) {
+    _error = abs(_left->getTicks()) - abs(_right->getTicks());
+    _slave->setPower(min(255, _slave->getPower() - _error / _errorDivider));
+    
+    _left->moveClockwise();
+    _right->moveCounterclockwise();
+  } else if(angle == 1) {
+    _left->stop();
+    _right->moveClockwise();
+  } else if (angle == 2) {
+    _error = abs(_left->getTicks()) - abs(_right->getTicks());
+    _slave->setPower(min(255, _slave->getPower() - _error / _errorDivider));
+
+    _left->moveCounterclockwise();
+    _right->moveClockwise();
+  } else if (angle == 3) {
+    _left->moveCounterclockwise();
+    _right->stop();
+  }
 
   _left->resetTicks();
   _right->resetTicks();
-
-  _left->moveClockwise();
-  _right->moveCounterclockwise();
 }
 
 void Rover::stop()

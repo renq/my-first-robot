@@ -14,7 +14,7 @@ Engine::Engine(int powerPin, int in1Pin, int in2Pin, int encAPin, int encBPin)
   pinMode(_in1Pin, OUTPUT);
   pinMode(_in2Pin, OUTPUT);
   pinMode(_encAPin, INPUT_PULLUP);
-  pinMode(_encBPin, INPUT_PULLUP);
+  pinMode(_encBPin, INPUT);
 
   stop();
   setPower(255);
