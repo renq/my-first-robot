@@ -13,18 +13,20 @@ class Engine
     void moveClockwise();
     void moveCounterclockwise();
     void stop();
-    void setPower(unsigned char power);
-    void resetDistance();
-    long getDistance();
+    void setPower(int power);
+    int getPower();
+    void resetTicks();
+    long getTicks();
     void interruptA();
   private:
     int _powerPin;
+    int _power;
     int _in1Pin;
     int _in2Pin;
     int _encAPin;
     int _encBPin;
     char _direction;
-    long _distance;
+    long _ticks;
 };
 
 #endif

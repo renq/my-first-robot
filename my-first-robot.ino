@@ -1,6 +1,7 @@
 #include "Engine.h"
+#include "Rover.h"
 
-#define VERSION "v13"
+#define VERSION "v15"
 
 #define LEFT_IN1 8
 #define LEFT_IN2 9
@@ -18,6 +19,7 @@
 
 Engine leftEngine = Engine(LEFT_POWER, LEFT_IN1, LEFT_IN2, LEFT_ENC_A, LEFT_ENC_B);
 Engine rightEngine = Engine(RIGHT_POWER, RIGHT_IN1, RIGHT_IN2, RIGHT_ENC_A, RIGHT_ENC_B);
+Rover rover = Rover(&leftEngine, &rightEngine, 255);
 
 int leftPower = 255;
 int rightPower = 255;
@@ -26,27 +28,27 @@ unsigned long currentTime;
 unsigned long loopTime;
 
 void setup() { 
-  Serial.begin(9600);
-  currentTime = millis();
-  loopTime = currentTime; 
+  Serial.begin(115200);
+//  currentTime = millis();
+//  loopTime = currentTime; 
 
   attachInterrupt(digitalPinToInterrupt(LEFT_ENC_A), encoderLeft, FALLING);
   attachInterrupt(digitalPinToInterrupt(RIGHT_ENC_A), encoderRight, FALLING);
+  rover.chooseLeftAsSlave();
 }
  
 void loop() {  
-  delay(100);
-  currentTime = millis();
-  handleInput();
-//  leftEngine.moveClockwise(); 
+//  currentTime = millis();
+  rover.stop();
+  delay(5000);
 
-  
-//  if (currentTime >= loopTime + 5) {  
-//    handleLeftEngine();
-//    handleRightEngine();
-//  }
-
-  loopTime = currentTime;
+  for (int i = 0; i < 2000; i+=50) {
+    rover.move(0);
+    delay(50);
+  }
+//  handleInput();
+//  loopTime = currentTime;
+//  delay(2000);
 }
 
 void encoderLeft() {
@@ -65,12 +67,14 @@ void handleInput() {
     // leftEngine.setPower(100);
     // rightEngine.setPower(100);
 
-  String powerStr = "";
+    String powerStr = "";
 
     switch (input) {
       case 'w':
-        leftEngine.moveClockwise();
-        rightEngine.moveCounterclockwise();
+        rover.move(0);
+        Serial.println("forward");
+        Serial.println(leftEngine.getPower());
+        Serial.println(rightEngine.getPower());
         break;
       case 'a':
         leftEngine.stop();
@@ -81,8 +85,8 @@ void handleInput() {
         rightEngine.stop();
         break;
       case 's':
-        leftEngine.stop();
-        rightEngine.stop();
+        Serial.println("stop");
+        rover.stop();
         break;
       case 'x':
         leftEngine.moveCounterclockwise();
@@ -90,68 +94,10 @@ void handleInput() {
         break;
         
       case '0':
-        leftEngine.resetDistance();
-        rightEngine.resetDistance();
+        leftEngine.resetTicks();
+        rightEngine.resetTicks();
         break;
-
-      case '1':
-        Serial.println(leftEngine.getDistance());
-        break;
-        
-      case '2':
-        Serial.println(rightEngine.getDistance());
-        break;
-
-      // calibrate
-      case 'c':
-        leftEngine.stop();
-        rightEngine.stop();
-        
-        leftEngine.resetDistance();
-        rightEngine.resetDistance();
-
-        leftPower = 255;
-        rightPower = 255;
-        
-        leftEngine.setPower(leftPower);
-        rightEngine.setPower(rightPower);
-        
-        leftEngine.moveClockwise();
-        rightEngine.moveClockwise();
-
-        delay(100);
-        
-        int diff;
-        do {
-          leftEngine.resetDistance();
-          rightEngine.resetDistance();
-          delay(333);
-          
-          Serial.print("Left engine distance: ");
-          Serial.println(leftEngine.getDistance());
-          Serial.print("Right engine distance: ");
-          Serial.println(rightEngine.getDistance());
-          diff = rightEngine.getDistance() - leftEngine.getDistance();
-          if (diff > 0) {
-            rightPower--;
-          }
-          if (diff < 0) {
-            leftPower--;
-          }
-          
-          Serial.print("Set up left power to: ");
-          Serial.println(leftPower);
-          Serial.print("Set up right power to: ");
-          Serial.println(rightPower);
-          leftEngine.setPower(leftPower);
-          rightEngine.setPower(rightPower);
-
-        } while (abs(diff) > 3);
-        
-        leftEngine.stop();
-        rightEngine.stop();
-        break;
-
+     
       case '<':
         powerStr += (char)Serial.read();
         powerStr += (char)Serial.read();

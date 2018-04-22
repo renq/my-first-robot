@@ -38,23 +38,29 @@ void Engine::stop()
   digitalWrite(_in2Pin, LOW);
 }
 
-void Engine::setPower(unsigned char power)
+void Engine::setPower(int power)
 {
-  analogWrite(_powerPin, power);
+  _power = power;
+  analogWrite(_powerPin, _power);
 }
 
-void Engine::resetDistance()
+int Engine::getPower()
 {
-  _distance = 0;
+  return _power;
 }
 
-long Engine::getDistance()
+void Engine::resetTicks()
 {
-  return _distance;
+  _ticks = 0;
+}
+
+long Engine::getTicks()
+{
+  return _ticks;
 }
 
 void Engine::interruptA()
 {
-  _distance += digitalRead(_encBPin) == 1 ? 1 : -1;
+  _ticks += digitalRead(_encBPin) == 1 ? 1 : -1;
 }
 
