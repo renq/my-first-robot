@@ -4,8 +4,6 @@
 #ifndef Engine_h
 #define Engine_h
 
-#include "Arduino.h"
-
 class Engine
 {
   public:
@@ -25,9 +23,7 @@ class Engine
     int _in2Pin;
     int _encAPin;
     int _encBPin;
-    char _direction;
-    long _ticks;
+    volatile long _ticks;
 };
 
 #endif
-

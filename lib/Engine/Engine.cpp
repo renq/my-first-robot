@@ -1,3 +1,5 @@
+#ifndef UNIT_TEST
+
 #include "Arduino.h"
 #include "Engine.h"
 
@@ -8,8 +10,8 @@ Engine::Engine(int powerPin, int in1Pin, int in2Pin, int encAPin, int encBPin)
   _in2Pin = in2Pin;
   _encAPin = encAPin;
   _encBPin = encBPin;
-  
-   
+
+
   pinMode(_powerPin, OUTPUT);
   pinMode(_in1Pin, OUTPUT);
   pinMode(_in2Pin, OUTPUT);
@@ -64,3 +66,4 @@ void Engine::interruptA()
   _ticks += digitalRead(_encBPin) == 1 ? 1 : -1;
 }
 
+#endif

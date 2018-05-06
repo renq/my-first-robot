@@ -5,22 +5,25 @@
 #define Rover_h
 
 #include "Arduino.h"
-#include "Engine.h"
+#include <Engine.h>
+#include <Joystick.h>
 
 class Rover
 {
   public:
-    Rover(Engine *left, Engine *right, int power);
+    Rover(Engine *left, Engine *right, Joystick *joystick);
     void setPower(int power);
     void setErrorDivider(int power);
     void chooseLeftAsSlave();
     void chooseRightAsSlave();
     void move(float angle);
     void stop();
+    void handleJoystick();
   private:
     Engine *_left;
     Engine *_right;
     Engine *_slave;
+    Joystick *_joystick;
     int _error = 0;
     int _errorDivider = 5;
 };
