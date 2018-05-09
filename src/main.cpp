@@ -1,7 +1,7 @@
 #ifndef UNIT_TEST
 
 #include <Arduino.h>
-#include <Engine.h>
+#include <PinEngine.h>
 #include <Rover.h>
 #include <TextJoystick.h>
 #include <Ticker.h>
@@ -36,8 +36,8 @@ void encoderLeft();
 void encoderRight();
 void updateJoystick();
 
-Engine leftEngine = Engine(LEFT_POWER, LEFT_IN1, LEFT_IN2, LEFT_ENC_A, LEFT_ENC_B);
-Engine rightEngine = Engine(RIGHT_POWER, RIGHT_IN1, RIGHT_IN2, RIGHT_ENC_A, RIGHT_ENC_B);
+PinEngine leftEngine = PinEngine(LEFT_POWER, LEFT_IN1, LEFT_IN2, LEFT_ENC_A, LEFT_ENC_B);
+PinEngine rightEngine = PinEngine(RIGHT_POWER, RIGHT_IN1, RIGHT_IN2, RIGHT_ENC_A, RIGHT_ENC_B);
 TextJoystick joystick = TextJoystick();
 Rover rover = Rover(&leftEngine, &rightEngine, &joystick);
 
@@ -52,7 +52,7 @@ int interval = 50;
 char inputBuffer[21];
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   attachInterrupt(digitalPinToInterrupt(LEFT_ENC_A), encoderLeft, FALLING);
   attachInterrupt(digitalPinToInterrupt(RIGHT_ENC_A), encoderRight, FALLING);
@@ -74,6 +74,11 @@ void updateJoystick()
     inputBuffer[20] = 0;
 
     joystick.command(inputBuffer);
+
+    // Serial.print("x = ");
+    // Serial.println(joystick.getX());
+    // Serial.print("y = ");
+    // Serial.println(joystick.getY());
   }
 }
 

@@ -1,10 +1,9 @@
 #include "TextJoystick.h"
 #include "unity.h"
-#include <stdio.h>
 
 #ifdef UNIT_TEST
 
-TextJoystick textJoystick = TextJoystick();
+TextJoystick textJoystick;
 
 void setUp(void)
 {

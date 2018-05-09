@@ -4,7 +4,6 @@
 #ifndef Rover_h
 #define Rover_h
 
-#include "Arduino.h"
 #include <Engine.h>
 #include <Joystick.h>
 
@@ -29,4 +28,3 @@ class Rover
 };
 
 #endif
-

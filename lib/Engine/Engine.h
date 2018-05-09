@@ -1,29 +1,17 @@
-/*
-  Engine.h - Lipescu's engine class
-*/
 #ifndef Engine_h
 #define Engine_h
 
 class Engine
 {
   public:
-    Engine(int powerPin, int in1Pin, int in2Pin, int encAPin, int encBPin);
-    void moveClockwise();
-    void moveCounterclockwise();
-    void stop();
-    void setPower(int power);
-    int getPower();
-    void resetTicks();
-    long getTicks();
-    void interruptA();
-  private:
-    int _powerPin;
-    int _power;
-    int _in1Pin;
-    int _in2Pin;
-    int _encAPin;
-    int _encBPin;
-    volatile long _ticks;
+    virtual void moveClockwise() = 0;
+    virtual void moveCounterclockwise() = 0;
+    virtual void stop() = 0;
+    virtual void setPower(int power) = 0;
+    virtual int getPower() = 0;
+    virtual void resetTicks() = 0;
+    virtual long getTicks() = 0;
+    virtual void interruptA() = 0;
 };
 
 #endif

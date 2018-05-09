@@ -1,6 +1,18 @@
 #include "Engine.h"
 #include "Rover.h"
 
+#ifndef abs
+  #define abs(x) ((x)>0?(x):-(x))
+#endif
+
+#ifndef min
+  #define min(a,b) ((a)<(b)?(a):(b))
+#endif
+
+#ifndef max
+  #define max(a,b) ((a)>(b)?(a):(b))
+#endif
+
 Rover::Rover(Engine *left, Engine *right, Joystick *joystick)
 {
   _left = left;
