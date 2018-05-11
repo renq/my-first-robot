@@ -12,6 +12,8 @@ class Engine
     virtual void resetTicks() = 0;
     virtual long getTicks() = 0;
     virtual void interruptA() = 0;
+
+    static const int MAX_VALUE = 255;
 };
 
 #endif

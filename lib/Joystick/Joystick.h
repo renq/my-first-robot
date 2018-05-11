@@ -4,8 +4,18 @@
 class Joystick
 {
   public:
-    virtual int getX() = 0;
-    virtual int getY() = 0;
+    void setX(int value);
+    int getX();
+
+    void setY(int value);
+    int getY();
+
+    static const int MIN_VALUE = -512;
+    static const int MAX_VALUE = 511;
+
+  protected:
+    int x = 0;
+    int y = 0;
 };
 
 #endif

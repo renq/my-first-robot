@@ -23,29 +23,39 @@ Rover::Rover(Engine *left, Engine *right, Joystick *joystick)
 
 void Rover::handleJoystick()
 {
-  /*
-  * Joystick range X, Y: from -512 to +511
-  */
-  int left, right;
-  int sgnx, sgny;
+  long left, right;
+  int sgny;
 
   left = right = _joystick->getY();
-  sgnx = (_joystick->getX() > 0 ? 1 : -1);
   sgny = (_joystick->getY() > 0 ? 1 : -1);
 
-  if (sgnx < 0) {
-    left = max(0, left + sgny * _joystick->getX());
+  left = min(Joystick::MAX_VALUE, max(Joystick::MIN_VALUE, left + sgny * _joystick->getX()));
+  right = min(Joystick::MAX_VALUE, max(Joystick::MIN_VALUE, right - sgny * _joystick->getX()));
+
+  // left i right are from range from -512 to 511.
+  // When both are neative, rover is going backwards.
+  // If they are positive, rover is going forward.
+
+  if (left > 0) {
+    _left->setPower(left * Engine::MAX_VALUE / Joystick::MAX_VALUE);
+    _left->moveCounterclockwise();
+
   } else {
-    right = max(0, right - sgny * _joystick->getX());
+    _left->setPower(left * Engine::MAX_VALUE / Joystick::MIN_VALUE);
+    _left->moveClockwise();
   }
 
-  // left i right są z przedziału -512 do 511. Gdy liczby są ujemne - cofamy robota
-  // Gdy dodatnie - lecimy do przodu.
-  // Wartości trzeba przemapować na moc silnika, np. left=right=512 to moc silnika 255.
-  //
-
+  if (right > 0) {
+    _right->setPower(right * Engine::MAX_VALUE / Joystick::MAX_VALUE);
+    _right->moveClockwise();
+  } else {
+    _right->setPower(right * Engine::MAX_VALUE / Joystick::MIN_VALUE);
+    _right->moveCounterclockwise();
+  }
 }
 
+// TO BE REMOVED!
+// Error compensation algorithm should be moved to handleJoystick
 void Rover::move(float angle)
 {
   if (angle == 0) {
@@ -64,8 +74,8 @@ void Rover::move(float angle)
     _left->moveCounterclockwise();
     _right->moveClockwise();
   } else if (angle == 3) {
-    _left->moveCounterclockwise();
     _right->stop();
+    _left->moveCounterclockwise();
   }
 
   _left->resetTicks();

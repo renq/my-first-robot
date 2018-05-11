@@ -1,5 +1,3 @@
-#ifndef UNIT_TEST
-
 #include "DummyEngine.h"
 
 DummyEngine::DummyEngine()
@@ -8,10 +6,12 @@ DummyEngine::DummyEngine()
 
 void DummyEngine::moveClockwise()
 {
+  _clockwise = true;
 }
 
 void DummyEngine::moveCounterclockwise()
 {
+  _clockwise = false;
 }
 
 void DummyEngine::stop()
@@ -41,4 +41,7 @@ void DummyEngine::interruptA()
 {
 }
 
-#endif
+bool DummyEngine::isMovingClockwise()
+{
+  return _clockwise;
+}

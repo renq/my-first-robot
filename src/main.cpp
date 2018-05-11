@@ -1,4 +1,5 @@
-#ifndef UNIT_TEST
+#ifdef PLATFORM_ARDUINO
+#ifdef REAL_ROVER
 
 #include <Arduino.h>
 #include <PinEngine.h>
@@ -32,6 +33,12 @@
 #define LEFT_ENC_B 12
 #define RIGHT_ENC_B 13
 
+/*
+ * Some settings
+ */
+#define JOYSTICK_REFRESH_RATE 50
+#define BUFFER_SIZE 15
+
 void encoderLeft();
 void encoderRight();
 void updateJoystick();
@@ -41,15 +48,10 @@ PinEngine rightEngine = PinEngine(RIGHT_POWER, RIGHT_IN1, RIGHT_IN2, RIGHT_ENC_A
 TextJoystick joystick = TextJoystick();
 Rover rover = Rover(&leftEngine, &rightEngine, &joystick);
 
-Ticker timerJoystick(updateJoystick, 50);
+char inputBuffer[BUFFER_SIZE];
 
-int leftPower = 255;
-int rightPower = 255;
+Ticker timerJoystick(updateJoystick, JOYSTICK_REFRESH_RATE);
 
-unsigned long currentTime, previousTime = 0;
-int interval = 50;
-
-char inputBuffer[21];
 
 void setup() {
   Serial.begin(9600);
@@ -70,15 +72,11 @@ void loop() {
 void updateJoystick()
 {
   if (Serial.available() > 0) {
-    Serial.readBytes(inputBuffer, 20);
-    inputBuffer[20] = 0;
+    int read = Serial.readBytes(inputBuffer, BUFFER_SIZE);
+    inputBuffer[read] = 0;
 
     joystick.command(inputBuffer);
-
-    // Serial.print("x = ");
-    // Serial.println(joystick.getX());
-    // Serial.print("y = ");
-    // Serial.println(joystick.getY());
+    rover.handleJoystick();
   }
 }
 
@@ -90,60 +88,6 @@ void encoderRight() {
   rightEngine.interruptA();
 }
 
-// void handleInput(int input) {
-//   // Serial.println(input);
-//
-//   // leftEngine.setPower(100);
-//   // rightEngine.setPower(100);
-//
-//   String powerStr = "";
-//
-//   switch (input) {
-//     case 'w':
-//       rover.move(0);
-//       Serial.println(leftEngine.getTicks());
-//       Serial.println(rightEngine.getTicks());
-//       Serial.println("forward");
-//       Serial.println(leftEngine.getPower());
-//       Serial.println(rightEngine.getPower());
-//       break;
-//     case 'a':
-//       rover.move(3);
-//       break;
-//     case 'd':
-//       rover.move(1);
-//       break;
-//     case 's':
-//       rover.stop();
-//       break;
-//     case 'x':
-//       rover.move(2);
-//       break;
-//
-//     case '<':
-//       powerStr += (char)Serial.read();
-//       powerStr += (char)Serial.read();
-//       powerStr += (char)Serial.read();
-//       leftPower = powerStr.toInt();
-//       Serial.print("Set up left power to: ");
-//       Serial.println(leftPower);
-//       leftEngine.setPower(leftPower);
-//       break;
-//
-//     case '>':
-//       powerStr += (char)Serial.read();
-//       powerStr += (char)Serial.read();
-//       powerStr += (char)Serial.read();
-//       rightPower = powerStr.toInt();
-//       Serial.print("Set up right power to: ");
-//       Serial.println(rightPower);
-//       rightEngine.setPower(rightPower);
-//       break;
-//
-//     case 'v':
-//       Serial.println(VERSION);
-//       break;
-//   }
-// }
+#endif
 
 #endif

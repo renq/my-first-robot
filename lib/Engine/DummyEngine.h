@@ -14,8 +14,10 @@ class DummyEngine: public Engine {
     void resetTicks();
     long getTicks();
     void interruptA();
+    bool isMovingClockwise();
   private:
     int _power = 0;
+    bool _clockwise = true;
 };
 
 #endif

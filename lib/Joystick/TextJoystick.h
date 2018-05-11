@@ -5,14 +5,7 @@
 
 class TextJoystick: public Joystick {
   public:
-    int getX();
-    int getY();
-
     void command(char *command);
-
-  private:
-    int x = 0;
-    int y = 0;
 };
 
 #endif

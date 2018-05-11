@@ -3,7 +3,7 @@
 
 #ifdef UNIT_TEST
 
-TextJoystick textJoystick;
+TextJoystick textJoystick = TextJoystick();
 
 void setUp(void)
 {
@@ -14,27 +14,27 @@ void tearDown(void)
 {
 }
 
-void test_only_x(void)
+void test_both_positive(void)
 {
-  char input[] = "x=100";
+  char input[] = "100,+200";
   textJoystick.command(input);
 
   TEST_ASSERT_EQUAL(100, textJoystick.getX());
-  TEST_ASSERT_EQUAL(0, textJoystick.getY());
+  TEST_ASSERT_EQUAL(200, textJoystick.getY());
 }
 
-void test_only_y(void)
+void test_both_negative(void)
 {
-  char input[] = "y=-500";
+  char input[] = "-300,-500";
   textJoystick.command(input);
 
-  TEST_ASSERT_EQUAL(0, textJoystick.getX());
+  TEST_ASSERT_EQUAL(-300, textJoystick.getX());
   TEST_ASSERT_EQUAL(-500, textJoystick.getY());
 }
 
-void test_command(void)
+void test_mixed(void)
 {
-  char input[] = "x=100,y=-200";
+  char input[] = "100,-200";
   textJoystick.command(input);
 
   TEST_ASSERT_EQUAL(100, textJoystick.getX());
@@ -44,9 +44,9 @@ void test_command(void)
 int main(int argc, char **argv)
 {
   UNITY_BEGIN();
-  RUN_TEST(test_only_x);
-  RUN_TEST(test_only_y);
-  RUN_TEST(test_command);
+  RUN_TEST(test_both_positive);
+  RUN_TEST(test_both_negative);
+  RUN_TEST(test_mixed);
   UNITY_END();
 
   return 0;
