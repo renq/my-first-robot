@@ -34,6 +34,12 @@
 #define RIGHT_ENC_B 13
 
 /*
+ * Joystick analog pin settings
+ */
+#define JOYSTICK_AXIS_X 0;
+#define JOYSTICK_AXIS_Y 1;
+
+/*
  * Some settings
  */
 #define JOYSTICK_REFRESH_RATE 50
