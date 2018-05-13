@@ -1,11 +1,11 @@
-#ifndef PinEngine_h
-#define PinEngine_h
+#ifndef ArduinoEngine_h
+#define ArduinoEngine_h
 
 #include "Engine.h"
 
-class PinEngine: public Engine {
+class ArduinoEngine: public Engine {
   public:
-    PinEngine(int powerPin, int in1Pin, int in2Pin, int encAPin, int encBPin);
+    ArduinoEngine(int powerPin, int in1Pin, int in2Pin, int encAPin, int encBPin);
     void moveClockwise();
     void moveCounterclockwise();
     void stop();

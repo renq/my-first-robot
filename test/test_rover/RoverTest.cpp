@@ -23,7 +23,7 @@ void test_handle_joystick_at_zeros(void)
 {
   joystick.setX(0);
   joystick.setY(0);
-  rover.handleJoystick();
+  rover.update();
 
   TEST_ASSERT_EQUAL(engineLeft.getPower(), 0);
   TEST_ASSERT_EQUAL(engineRight.getPower(), 0);
@@ -33,7 +33,7 @@ void test_handle_joystick_full_forward(void)
 {
   joystick.setX(0);
   joystick.setY(511);
-  rover.handleJoystick();
+  rover.update();
 
   TEST_ASSERT_EQUAL(255, engineLeft.getPower());
   TEST_ASSERT_FALSE(engineLeft.isMovingClockwise());
@@ -46,7 +46,7 @@ void test_handle_joystick_full_reverse(void)
 {
   joystick.setX(0);
   joystick.setY(-512);
-  rover.handleJoystick();
+  rover.update();
 
   TEST_ASSERT_EQUAL(255, engineLeft.getPower());
   TEST_ASSERT_TRUE(engineLeft.isMovingClockwise());

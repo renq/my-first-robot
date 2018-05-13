@@ -13,6 +13,13 @@
   #define max(a,b) ((a)>(b)?(a):(b))
 #endif
 
+#ifndef map
+  long map(long x, long in_min, long in_max, long out_min, long out_max)
+  {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  }
+#endif
+
 Rover::Rover(Engine *left, Engine *right, Joystick *joystick)
 {
   _left = left;
@@ -21,7 +28,7 @@ Rover::Rover(Engine *left, Engine *right, Joystick *joystick)
   _joystick = joystick;
 }
 
-void Rover::handleJoystick()
+void Rover::update()
 {
   long left, right;
   int sgny;
@@ -37,20 +44,23 @@ void Rover::handleJoystick()
   // If they are positive, rover is going forward.
 
   if (left > 0) {
-    _left->setPower(left * Engine::MAX_VALUE / Joystick::MAX_VALUE);
+    _left->setPower(map(left, 0, Joystick::MAX_VALUE, _minEnginePower, Engine::MAX_VALUE));
     _left->moveCounterclockwise();
-
-  } else {
-    _left->setPower(left * Engine::MAX_VALUE / Joystick::MIN_VALUE);
+  } else if (left < 0) {
+    _left->setPower(map(left, 0, Joystick::MIN_VALUE, _minEnginePower, Engine::MAX_VALUE));
     _left->moveClockwise();
+  } else {
+    _left->setPower(0);
   }
 
   if (right > 0) {
-    _right->setPower(right * Engine::MAX_VALUE / Joystick::MAX_VALUE);
+    _right->setPower(map(right, 0, Joystick::MAX_VALUE, _minEnginePower, Engine::MAX_VALUE));
     _right->moveClockwise();
-  } else {
-    _right->setPower(right * Engine::MAX_VALUE / Joystick::MIN_VALUE);
+  } else if (right < 0) {
+    _right->setPower(map(right, 0, Joystick::MIN_VALUE, _minEnginePower, Engine::MAX_VALUE));
     _right->moveCounterclockwise();
+  } else {
+    _right->setPower(0);
   }
 }
 
@@ -107,4 +117,9 @@ void Rover::setPower(int power)
 void Rover::setErrorDivider(int errorDivider)
 {
   _errorDivider = errorDivider;
+}
+
+void Rover::setMinimalEnginePower(int power)
+{
+  _minEnginePower = power;
 }

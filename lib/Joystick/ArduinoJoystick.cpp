@@ -4,7 +4,7 @@
 #include "ArduinoJoystick.h"
 
 #ifndef abs
-  #define abs(x) ((x)>0?(x):-(x))
+  #define abs(x) ((x) > 0 ? x : -x)
 #endif
 
 ArduinoJoystick::ArduinoJoystick(int axisX, int axisY)
@@ -20,20 +20,12 @@ ArduinoJoystick::ArduinoJoystick(int axisX, int axisY, int deadRadius)
   _deadRadius = deadRadius;
 }
 
-int ArduinoJoystick::getX()
-{
-  return abs(Joystick::getX()) < _deadRadius ? 0 : Joystick::getX();
-}
-
-int ArduinoJoystick::getY()
-{
-  return abs(Joystick::getY()) < _deadRadius ? 0 : Joystick::getY();
-}
-
 void ArduinoJoystick::update()
 {
-  setX(analogRead(_axisX) - 512);
-  setY(analogRead(_axisY) - 512);
+  int x = analogRead(_axisX) - 512;
+  int y = analogRead(_axisY) - 512;
+  setX(abs(x) >= _deadRadius ? x : 0);
+  setY(abs(y) >= _deadRadius ? y : 0);
 }
 
 #endif

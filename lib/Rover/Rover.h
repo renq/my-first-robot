@@ -13,11 +13,12 @@ class Rover
     Rover(Engine *left, Engine *right, Joystick *joystick);
     void setPower(int power);
     void setErrorDivider(int power);
+    void setMinimalEnginePower(int power);
     void chooseLeftAsSlave();
     void chooseRightAsSlave();
     void move(float angle);
     void stop();
-    void handleJoystick();
+    void update();
   private:
     Engine *_left;
     Engine *_right;
@@ -25,6 +26,7 @@ class Rover
     Joystick *_joystick;
     int _error = 0;
     int _errorDivider = 5;
+    int _minEnginePower = 0;
 };
 
 #endif

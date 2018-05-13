@@ -2,9 +2,9 @@
 #ifdef REAL_ROVER
 
 #include <Arduino.h>
-#include <PinEngine.h>
+#include <ArduinoEngine.h>
 #include <Rover.h>
-#include <TextJoystick.h>
+#include <ArduinoJoystick.h>
 #include <Ticker.h>
 
 #define VERSION "v18"
@@ -36,27 +36,27 @@
 /*
  * Joystick analog pin settings
  */
-#define JOYSTICK_AXIS_X 0;
-#define JOYSTICK_AXIS_Y 1;
+#define JOYSTICK_AXIS_X 0
+#define JOYSTICK_AXIS_Y 1
 
 /*
  * Some settings
  */
-#define JOYSTICK_REFRESH_RATE 50
-#define BUFFER_SIZE 15
+#define JOYSTICK_REFRESH_RATE 15
+#define DEBUG_TIMER 500
 
 void encoderLeft();
 void encoderRight();
 void updateJoystick();
+void debug();
 
-PinEngine leftEngine = PinEngine(LEFT_POWER, LEFT_IN1, LEFT_IN2, LEFT_ENC_A, LEFT_ENC_B);
-PinEngine rightEngine = PinEngine(RIGHT_POWER, RIGHT_IN1, RIGHT_IN2, RIGHT_ENC_A, RIGHT_ENC_B);
-TextJoystick joystick = TextJoystick();
+ArduinoEngine leftEngine = ArduinoEngine(LEFT_POWER, LEFT_IN1, LEFT_IN2, LEFT_ENC_A, LEFT_ENC_B);
+ArduinoEngine rightEngine = ArduinoEngine(RIGHT_POWER, RIGHT_IN1, RIGHT_IN2, RIGHT_ENC_A, RIGHT_ENC_B);
+ArduinoJoystick joystick = ArduinoJoystick(JOYSTICK_AXIS_X, JOYSTICK_AXIS_Y, 10);
 Rover rover = Rover(&leftEngine, &rightEngine, &joystick);
 
-char inputBuffer[BUFFER_SIZE];
-
-Ticker timerJoystick(updateJoystick, JOYSTICK_REFRESH_RATE);
+Ticker joystickTimer(updateJoystick, JOYSTICK_REFRESH_RATE);
+Ticker debugTimer(debug, DEBUG_TIMER);
 
 
 void setup() {
@@ -64,26 +64,35 @@ void setup() {
 
   attachInterrupt(digitalPinToInterrupt(LEFT_ENC_A), encoderLeft, FALLING);
   attachInterrupt(digitalPinToInterrupt(RIGHT_ENC_A), encoderRight, FALLING);
-
+  
   rover.chooseLeftAsSlave();
   rover.setPower(255);
+  rover.setMinimalEnginePower(100);
 
-  timerJoystick.start();
+  joystickTimer.start();
+  debugTimer.start();
 }
 
 void loop() {
-  timerJoystick.update();
+  joystickTimer.update();
+  debugTimer.update();
 }
 
 void updateJoystick()
 {
-  if (Serial.available() > 0) {
-    int read = Serial.readBytes(inputBuffer, BUFFER_SIZE);
-    inputBuffer[read] = 0;
+  joystick.update();
+  rover.update();
+}
 
-    joystick.command(inputBuffer);
-    rover.handleJoystick();
-  }
+void debug()
+{
+  Serial.print(joystick.getX());
+  Serial.print(",");
+  Serial.print(joystick.getY());
+  Serial.print(" => ");
+  Serial.print(leftEngine.getPower());
+  Serial.print(",");
+  Serial.println(rightEngine.getPower());
 }
 
 void encoderLeft() {

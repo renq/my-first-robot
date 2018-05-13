@@ -1,9 +1,9 @@
 #ifdef PLATFORM_ARDUINO
 
 #include "Arduino.h"
-#include "PinEngine.h"
+#include "ArduinoEngine.h"
 
-PinEngine::PinEngine(int powerPin, int in1Pin, int in2Pin, int encAPin, int encBPin)
+ArduinoEngine::ArduinoEngine(int powerPin, int in1Pin, int in2Pin, int encAPin, int encBPin)
 {
   _powerPin = powerPin;
   _in1Pin = in1Pin;
@@ -22,46 +22,46 @@ PinEngine::PinEngine(int powerPin, int in1Pin, int in2Pin, int encAPin, int encB
   setPower(255);
 }
 
-void PinEngine::moveClockwise()
+void ArduinoEngine::moveClockwise()
 {
   digitalWrite(_in1Pin, HIGH);
   digitalWrite(_in2Pin, LOW);
 }
 
-void PinEngine::moveCounterclockwise()
+void ArduinoEngine::moveCounterclockwise()
 {
   digitalWrite(_in1Pin, LOW);
   digitalWrite(_in2Pin, HIGH);
 }
 
-void PinEngine::stop()
+void ArduinoEngine::stop()
 {
   digitalWrite(_in1Pin, LOW);
   digitalWrite(_in2Pin, LOW);
 }
 
-void PinEngine::setPower(int power)
+void ArduinoEngine::setPower(int power)
 {
   _power = power;
   analogWrite(_powerPin, _power);
 }
 
-int PinEngine::getPower()
+int ArduinoEngine::getPower()
 {
   return _power;
 }
 
-void PinEngine::resetTicks()
+void ArduinoEngine::resetTicks()
 {
   _ticks = 0;
 }
 
-long PinEngine::getTicks()
+long ArduinoEngine::getTicks()
 {
   return _ticks;
 }
 
-void PinEngine::interruptA()
+void ArduinoEngine::interruptA()
 {
   _ticks += digitalRead(_encBPin) == 1 ? 1 : -1;
 }
