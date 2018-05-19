@@ -34,10 +34,12 @@
 #define RIGHT_ENC_B 13
 
 /*
- * Joystick analog pin settings
+ * Joystick pin settings. JOYSTICK_AXIS_X and JOYSTICK_AXIS_Y must be analog
+ pins. JOYSTICK_BUTTON is digital pin.
  */
 #define JOYSTICK_AXIS_X 0
 #define JOYSTICK_AXIS_Y 1
+#define JOYSTICK_BUTTON 2
 
 /*
  * Some settings
@@ -64,10 +66,12 @@ void setup() {
 
   attachInterrupt(digitalPinToInterrupt(LEFT_ENC_A), encoderLeft, FALLING);
   attachInterrupt(digitalPinToInterrupt(RIGHT_ENC_A), encoderRight, FALLING);
-  
+
+  pinMode(JOYSTICK_BUTTON, INPUT);
+
   rover.chooseLeftAsSlave();
   rover.setPower(255);
-  rover.setMinimalEnginePower(100);
+  rover.setMinimalEnginePower(40);
 
   joystickTimer.start();
   debugTimer.start();
@@ -86,13 +90,28 @@ void updateJoystick()
 
 void debug()
 {
-  Serial.print(joystick.getX());
-  Serial.print(",");
-  Serial.print(joystick.getY());
-  Serial.print(" => ");
-  Serial.print(leftEngine.getPower());
-  Serial.print(",");
-  Serial.println(rightEngine.getPower());
+  // Joystick
+  // Serial.print(joystick.getX());
+  // Serial.print(",");
+  // Serial.print(joystick.getY());
+  // Serial.print(" => ");
+  // Serial.print(leftEngine.getPower());
+  // Serial.print(",");
+  // Serial.println(rightEngine.getPower());
+  //
+  // // Encoders
+  // Serial.print("left = ");
+  // Serial.print(leftEngine.getTicks());
+  // Serial.print(", ");
+  // Serial.print("right = ");
+  // Serial.println(rightEngine.getTicks());
+  // if (analogRead(JOYSTICK_BUTTON) == 0) {
+  //   rightEngine.resetTicks();
+  //   leftEngine.resetTicks();
+  // }
+  // Serial.print(digitalRead(LEFT_ENC_A));
+  // Serial.print(",");
+  // Serial.println(digitalRead(LEFT_ENC_B));
 }
 
 void encoderLeft() {
