@@ -1,16 +1,21 @@
 #ifdef PLATFORM_ARDUINO
-#ifdef REAL_ROVER
 
 #include <Arduino.h>
+#include <Ticker.h>
 #include <ArduinoEngine.h>
 #include <Rover.h>
-#include <ArduinoJoystick.h>
-#include <Ticker.h>
+#include <SerialJoystickListener.h>
 
-#define VERSION "v18"
+#ifdef __DEBUG__
+ #define DEBUG_PRINT(x) Serial.print(x)
+ #define DEBUG_PRINTLN(x) Serial.println(x)
+#else
+ #define DEBUG_PRINT(x)
+ #define DEBUG_PRINTLN(x)
+#endif
 
 /**
- * Digital output pins
+ * Digital output pins (any digital pin)
  */
 #define LEFT_IN1 8
 #define LEFT_IN2 9
@@ -28,36 +33,36 @@
  * LEFT_ENC_A and RIGHT_ENC_A must be an INTERRUPT type (in Leonardo INT pins are 0-3 and 7).
  * LEFT_ENC_A and RIGHT_ENC_A could by any digital pins.
  */
-#define LEFT_ENC_A 0
-#define RIGHT_ENC_A 1
+/* ENC_A must be INT pins (internal interrupt) */
+#define LEFT_ENC_A 2
+#define RIGHT_ENC_A 3
+/* ENC_B is regular digital pin */
 #define LEFT_ENC_B 12
 #define RIGHT_ENC_B 13
 
-/*
- * Joystick pin settings. JOYSTICK_AXIS_X and JOYSTICK_AXIS_Y must be analog
- pins. JOYSTICK_BUTTON is digital pin.
+/**
+ * Joystick pin settings. Used when joystick is serial device (bluetooth).
+ * Serial1 TX/RX pins
  */
-#define JOYSTICK_AXIS_X 0
-#define JOYSTICK_AXIS_Y 1
-#define JOYSTICK_BUTTON 2
+#define JOYSTICK_WIRE_RX 0
+#define JOYSTICK_WIRE_TX 1
+#define JOYSTICK_TIMER 0
 
 /*
- * Some settings
+ * Debug settings
  */
-#define JOYSTICK_REFRESH_RATE 15
 #define DEBUG_TIMER 500
 
 void encoderLeft();
 void encoderRight();
-void updateJoystick();
 void debug();
 
 ArduinoEngine leftEngine = ArduinoEngine(LEFT_POWER, LEFT_IN1, LEFT_IN2, LEFT_ENC_A, LEFT_ENC_B);
 ArduinoEngine rightEngine = ArduinoEngine(RIGHT_POWER, RIGHT_IN1, RIGHT_IN2, RIGHT_ENC_A, RIGHT_ENC_B);
-ArduinoJoystick joystick = ArduinoJoystick(JOYSTICK_AXIS_X, JOYSTICK_AXIS_Y, 10);
+Joystick joystick = Joystick(10);
 Rover rover = Rover(&leftEngine, &rightEngine, &joystick);
+SerialJoystickListener joystickListener = SerialJoystickListener(&Serial1, &rover, &joystick);
 
-Ticker joystickTimer(updateJoystick, JOYSTICK_REFRESH_RATE);
 Ticker debugTimer(debug, DEBUG_TIMER);
 
 
@@ -67,51 +72,18 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(LEFT_ENC_A), encoderLeft, FALLING);
   attachInterrupt(digitalPinToInterrupt(RIGHT_ENC_A), encoderRight, FALLING);
 
-  pinMode(JOYSTICK_BUTTON, INPUT);
+  Serial1.begin(38400);
 
   rover.chooseLeftAsSlave();
   rover.setPower(255);
   rover.setMinimalEnginePower(40);
 
-  joystickTimer.start();
   debugTimer.start();
 }
 
 void loop() {
-  joystickTimer.update();
+  joystickListener.update();
   debugTimer.update();
-}
-
-void updateJoystick()
-{
-  joystick.update();
-  rover.update();
-}
-
-void debug()
-{
-  // Joystick
-  // Serial.print(joystick.getX());
-  // Serial.print(",");
-  // Serial.print(joystick.getY());
-  // Serial.print(" => ");
-  // Serial.print(leftEngine.getPower());
-  // Serial.print(",");
-  // Serial.println(rightEngine.getPower());
-  //
-  // // Encoders
-  // Serial.print("left = ");
-  // Serial.print(leftEngine.getTicks());
-  // Serial.print(", ");
-  // Serial.print("right = ");
-  // Serial.println(rightEngine.getTicks());
-  // if (analogRead(JOYSTICK_BUTTON) == 0) {
-  //   rightEngine.resetTicks();
-  //   leftEngine.resetTicks();
-  // }
-  // Serial.print(digitalRead(LEFT_ENC_A));
-  // Serial.print(",");
-  // Serial.println(digitalRead(LEFT_ENC_B));
 }
 
 void encoderLeft() {
@@ -122,6 +94,25 @@ void encoderRight() {
   rightEngine.interruptA();
 }
 
-#endif
+void debug() {
+  // Joystick
+  DEBUG_PRINT(joystick.getX());
+  DEBUG_PRINT(",");
+  DEBUG_PRINT(joystick.getY());
+  DEBUG_PRINT(" => ");
+  DEBUG_PRINT(leftEngine.getPower());
+  DEBUG_PRINT(",");
+  DEBUG_PRINTLN(rightEngine.getPower());
+
+  // Encoders
+  DEBUG_PRINT("left = ");
+  DEBUG_PRINT(leftEngine.getTicks());
+  DEBUG_PRINT(", ");
+  DEBUG_PRINT("right = ");
+  DEBUG_PRINTLN(rightEngine.getTicks());
+  DEBUG_PRINT(digitalRead(LEFT_ENC_A));
+  DEBUG_PRINT(",");
+  DEBUG_PRINTLN(digitalRead(LEFT_ENC_B));
+}
 
 #endif

@@ -9,7 +9,6 @@
 #include <DummyEngine.h>
 #include <Rover.h>
 #include <TextJoystick.h>
-#include <ArduinoJoystick.h>
 
 /*
  * Joystick analog pin settings
@@ -20,7 +19,7 @@
 DummyEngine leftEngine = DummyEngine();
 DummyEngine rightEngine = DummyEngine();
 TextJoystick textJoystick = TextJoystick();
-ArduinoJoystick arduinoJoystick = ArduinoJoystick(JOYSTICK_AXIS_X, JOYSTICK_AXIS_Y, 20);
+Joystick joystick = Joystick(10);
 Rover rover = Rover(&leftEngine, &rightEngine, &arduinoJoystick);
 
 char inputBuffer[21];

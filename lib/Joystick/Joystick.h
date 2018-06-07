@@ -4,6 +4,9 @@
 class Joystick
 {
   public:
+    Joystick();
+    Joystick(int deadRadius);
+
     void setX(int value);
     int getX();
 
@@ -14,6 +17,7 @@ class Joystick
     static const int MAX_VALUE = 511;
 
   protected:
+    int _deadRadius = 0;
     int x = 0;
     int y = 0;
 };
