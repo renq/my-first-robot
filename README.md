@@ -13,6 +13,10 @@ Rover components:
 - HC-05 bluetooth module
 - Arduino Bluetooth Joystick android application: https://play.google.com/store/apps/details?id=daniuscompany.bluetoothremotejoystick
 
+For the future:
+- I2C - https://www.instructables.com/id/ATTiny-USI-I2C-The-detailed-in-depth-and-infor/
+
+
 
 Materials I used during development:
 - http://www.robotc.net/wikiarchive/Tutorials/Arduino_Projects/Mobile_Robotics/VEX/Using_encoders_to_drive_straight
