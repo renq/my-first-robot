@@ -16,26 +16,30 @@ SerialJoystickListener::SerialJoystickListener(
 
 void SerialJoystickListener::update()
 {
-  char buffer[SerialJoystickListener::BUFFER_SIZE];
-  char command;
-  int value;
+  if (_stream->available() > 5) {
+    char buffer[SerialJoystickListener::BUFFER_SIZE];
+    char command;
+    int16_t value;
+    int16_t oldX = _joystick->getX();
+    int16_t oldY = _joystick->getY();
+    int16_t newX, newY;
 
-  if (_stream->available()) {
-    _stream->readBytesUntil(0x0A, buffer, SerialJoystickListener::BUFFER_SIZE);
+    _stream->readBytesUntil(0x0A, buffer, 100);
     sscanf(buffer, "%c%d\n", &command, &value);
 
     switch (command) {
       case 'S':
-        _joystick->setY(
-          map(value, 0, 1024, Joystick::MIN_VALUE, Joystick::MAX_VALUE)
-        );
+        newY = map(value, 0, 1024, Joystick::MIN_VALUE, Joystick::MAX_VALUE);
+        _joystick->setY(newY);
         break;
       case 'D':
-        _joystick->setX(
-          map(value, 0, 1024, Joystick::MIN_VALUE, Joystick::MAX_VALUE)
-        );
+        newX = map(value, 0, 1024, Joystick::MIN_VALUE, Joystick::MAX_VALUE);
+        _joystick->setX(newX);
         break;
     }
-    _rover->update();
+
+    if (oldX != newX || oldY != newY) {
+      _rover->update();
+    }
   }
 }

@@ -18,12 +18,12 @@ void DummyEngine::stop()
 {
 }
 
-void DummyEngine::setPower(int power)
+void DummyEngine::setPower(uint8_t power)
 {
   _power = power;
 }
 
-int DummyEngine::getPower()
+uint8_t DummyEngine::getPower()
 {
   return _power;
 }
@@ -32,7 +32,7 @@ void DummyEngine::resetTicks()
 {
 }
 
-long DummyEngine::getTicks()
+int32_t DummyEngine::getTicks()
 {
   return 0;
 }

@@ -31,7 +31,7 @@ Rover::Rover(Engine *left, Engine *right, Joystick *joystick)
 void Rover::update()
 {
   long left, right;
-  int sgny;
+  int8_t sgny;
 
   left = right = _joystick->getY();
   sgny = (_joystick->getY() > 0 ? 1 : -1);
@@ -108,18 +108,18 @@ void Rover::chooseRightAsSlave()
   _slave = _right;
 }
 
-void Rover::setPower(int power)
+void Rover::setPower(uint8_t power)
 {
   _left->setPower(power);
   _right->setPower(power);
 }
 
-void Rover::setErrorDivider(int errorDivider)
+void Rover::setErrorDivider(uint8_t errorDivider)
 {
   _errorDivider = errorDivider;
 }
 
-void Rover::setMinimalEnginePower(int power)
+void Rover::setMinimalEnginePower(uint8_t power)
 {
   _minEnginePower = power;
 }

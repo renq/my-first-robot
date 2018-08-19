@@ -8,12 +8,12 @@ Joystick::Joystick()
 {
 }
 
-Joystick::Joystick(int deadRadius)
+Joystick::Joystick(int16_t deadRadius)
 {
   _deadRadius = deadRadius;
 }
 
-void Joystick::setX(int value)
+void Joystick::setX(int16_t value)
 {
   x = value;
 }
@@ -23,7 +23,7 @@ int Joystick::getX()
   return abs(x) >= _deadRadius ? x : 0;
 }
 
-void Joystick::setY(int value)
+void Joystick::setY(int16_t value)
 {
   y = value;
 }

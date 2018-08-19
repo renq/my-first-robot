@@ -9,14 +9,14 @@ class DummyEngine: public Engine {
     void moveClockwise();
     void moveCounterclockwise();
     void stop();
-    void setPower(int power);
-    int getPower();
+    void setPower(uint8_t power);
+    uint8_t getPower();
     void resetTicks();
-    long getTicks();
+    int32_t getTicks();
     void interruptA();
     bool isMovingClockwise();
   private:
-    int _power = 0;
+    uint8_t _power = 0;
     bool _clockwise = true;
 };
 

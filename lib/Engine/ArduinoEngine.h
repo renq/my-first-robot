@@ -5,23 +5,23 @@
 
 class ArduinoEngine: public Engine {
   public:
-    ArduinoEngine(int powerPin, int in1Pin, int in2Pin, int encAPin, int encBPin);
+    ArduinoEngine(uint8_t powerPin, uint8_t in1Pin, uint8_t in2Pin, uint8_t encAPin, uint8_t encBPin);
     void moveClockwise();
     void moveCounterclockwise();
     void stop();
-    void setPower(int power);
-    int getPower();
+    void setPower(uint8_t power);
+    uint8_t getPower();
     void resetTicks();
-    long getTicks();
+    int32_t getTicks();
     void interruptA();
   private:
-    int _powerPin;
-    int _power;
-    int _in1Pin;
-    int _in2Pin;
-    int _encAPin;
-    int _encBPin;
-    volatile long _ticks;
+    uint8_t _powerPin;
+    uint8_t _power;
+    uint8_t _in1Pin;
+    uint8_t _in2Pin;
+    uint8_t _encAPin;
+    uint8_t _encBPin;
+    volatile int32_t _ticks;
 };
 
 #endif

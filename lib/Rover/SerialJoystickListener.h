@@ -11,7 +11,7 @@ class SerialJoystickListener
     SerialJoystickListener(Stream *stream, Rover *rover, Joystick *joystick);
     void update();
   protected:
-    static const int BUFFER_SIZE = 100;
+    static const uint8_t BUFFER_SIZE = 100;
     Stream* _stream = 0;
     Rover* _rover = 0;
     Joystick* _joystick = 0;

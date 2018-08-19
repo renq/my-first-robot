@@ -1,25 +1,27 @@
 #ifndef Joystick_h
 #define Joystick_h
 
+#include <stdint.h>
+
 class Joystick
 {
   public:
     Joystick();
-    Joystick(int deadRadius);
+    Joystick(int16_t deadRadius);
 
-    void setX(int value);
+    void setX(int16_t value);
     int getX();
 
-    void setY(int value);
+    void setY(int16_t value);
     int getY();
 
-    static const int MIN_VALUE = -512;
-    static const int MAX_VALUE = 511;
+    static const int16_t MIN_VALUE = -512;
+    static const int16_t MAX_VALUE = 511;
 
   protected:
-    int _deadRadius = 0;
-    int x = 0;
-    int y = 0;
+    int16_t _deadRadius = 0;
+    int16_t x = 0;
+    int16_t y = 0;
 };
 
 #endif

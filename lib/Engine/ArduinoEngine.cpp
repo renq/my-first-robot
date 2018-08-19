@@ -3,7 +3,7 @@
 #include "Arduino.h"
 #include "ArduinoEngine.h"
 
-ArduinoEngine::ArduinoEngine(int powerPin, int in1Pin, int in2Pin, int encAPin, int encBPin)
+ArduinoEngine::ArduinoEngine(uint8_t powerPin, uint8_t in1Pin, uint8_t in2Pin, uint8_t encAPin, uint8_t encBPin)
 {
   _powerPin = powerPin;
   _in1Pin = in1Pin;
@@ -40,13 +40,13 @@ void ArduinoEngine::stop()
   digitalWrite(_in2Pin, LOW);
 }
 
-void ArduinoEngine::setPower(int power)
+void ArduinoEngine::setPower(uint8_t power)
 {
   _power = power;
   analogWrite(_powerPin, _power);
 }
 
-int ArduinoEngine::getPower()
+uint8_t ArduinoEngine::getPower()
 {
   return _power;
 }
@@ -56,7 +56,7 @@ void ArduinoEngine::resetTicks()
   _ticks = 0;
 }
 
-long ArduinoEngine::getTicks()
+int32_t ArduinoEngine::getTicks()
 {
   return _ticks;
 }

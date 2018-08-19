@@ -11,9 +11,9 @@ class Rover
 {
   public:
     Rover(Engine *left, Engine *right, Joystick *joystick);
-    void setPower(int power);
-    void setErrorDivider(int power);
-    void setMinimalEnginePower(int power);
+    void setPower(uint8_t power);
+    void setErrorDivider(uint8_t power);
+    void setMinimalEnginePower(uint8_t power);
     void chooseLeftAsSlave();
     void chooseRightAsSlave();
     void move(float angle);
@@ -24,9 +24,9 @@ class Rover
     Engine *_right;
     Engine *_slave;
     Joystick *_joystick;
-    int _error = 0;
-    int _errorDivider = 5;
-    int _minEnginePower = 0;
+    uint8_t _error = 0;
+    uint8_t _errorDivider = 5;
+    uint8_t _minEnginePower = 0;
 };
 
 #endif
