@@ -1,6 +1,5 @@
 #ifdef PLATFORM_ARDUINO
 
-#include <Arduino.h>
 #include <Ticker.h>
 #include <ArduinoEngine.h>
 #include <Rover.h>
@@ -50,7 +49,7 @@ SerialJoystickListener joystickListener = SerialJoystickListener(&JOYSTICK_SERIA
 Ticker debugTimer(debug, DEBUG_TIMER);
 
 
-void setup() {
+int main() {
   DEBUG_SERIAL.begin(9600);
   while (!Serial) {
     // wait for connect
@@ -66,11 +65,11 @@ void setup() {
   rover.setMinimalEnginePower(40);
 
   debugTimer.start();
-}
 
-void loop() {
-  joystickListener.update();
-  debugTimer.update();
+  while (true) {
+    joystickListener.update();
+    debugTimer.update();
+  }
 }
 
 void encoderLeft() {
